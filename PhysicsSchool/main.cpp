@@ -23,8 +23,8 @@ int main(int argc, char* argv[]) {
 
 	// 3. SETUP RIGID BODIES:
 
-	PhysicsBody* ground  = new PhysicsBody(groundShape,  btScalar(0), btVector3(0, -1, 0));
-	PhysicsBody* falling = new PhysicsBody(fallingShape, btScalar(1), btVector3(0, 50, 0)); 
+	PhysicsBody* ground  = physicsWorld->createBody(groundShape,  btScalar(0), btVector3(0, -1, 0));
+	PhysicsBody* falling = physicsWorld->createBody(fallingShape, btScalar(1), btVector3(0, 50, 0)); 
 
 	// 4. RUN SIMULATION:
 
@@ -36,10 +36,6 @@ int main(int argc, char* argv[]) {
 		std::cout << "sphere height: " << transform.getOrigin().getY() << std::endl;
 	}
 
-	// 5. TEARDOWN RIGID BODIES:
-
-	delete falling;
-	delete ground;
 
 	// 6. TEARDOWN COLLISION SHAPES:
 

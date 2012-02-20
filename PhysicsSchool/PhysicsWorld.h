@@ -2,6 +2,7 @@
 #define PhysicsWorld_h
 
 #include "PhysicsBody.h"
+#include <vector>
 
 class PhysicsWorld {
 public:
@@ -10,7 +11,8 @@ public:
 
 	btDiscreteDynamicsWorld* getDynamicsWorld(void);
 
-	void tick(void);
+	virtual void tick(void);
+	virtual PhysicsBody* createBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
 
 protected:
 	btBroadphaseInterface*               mBroadphase;
@@ -18,6 +20,7 @@ protected:
 	btCollisionDispatcher*               mDispatcher;
 	btSequentialImpulseConstraintSolver* mSolver;
 	btDiscreteDynamicsWorld*             mDynamicsWorld;
+	std::vector<PhysicsBody*>            mBodies;
 
 };
 
