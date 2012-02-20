@@ -1,0 +1,21 @@
+# visual studio:
+*.sdf
+*.opensdf
+*.suo
+*.user
+ipch/*
+Debug/*
+Release/*
+
+# backups:
+*.[zZ]ip
+*.[tgz]
+*.bak
+
+# vim:
+*~
+*.swp
+
+# OS:
+Thumbs.db
+
