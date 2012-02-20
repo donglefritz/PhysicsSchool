@@ -11,8 +11,9 @@ public:
 
 	btDiscreteDynamicsWorld* getDynamicsWorld(void);
 
-	virtual void tick(void);
+	virtual btCollisionShape* createInfinitePlane(btVector3& normal);
 	virtual PhysicsBody* createBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
+	virtual void tick(void);
 
 protected:
 	btBroadphaseInterface*               mBroadphase;
@@ -21,6 +22,7 @@ protected:
 	btSequentialImpulseConstraintSolver* mSolver;
 	btDiscreteDynamicsWorld*             mDynamicsWorld;
 	std::vector<PhysicsBody*>            mBodies;
+	std::vector<btCollisionShape*>       mCollisionShapes;
 
 };
 

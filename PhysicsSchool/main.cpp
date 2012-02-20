@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 
 	// 2. SETUP COLLISION SHAPES (reuse as much as possible):
 
-	btCollisionShape* groundShape  = new btStaticPlaneShape(btVector3(0,1,0),1);
+	btCollisionShape* groundShape  = physicsWorld->createInfinitePlane(btVector3(0,1,0));
 	btCollisionShape* fallingShape = new btSphereShape(1);
 
 	// 3. SETUP RIGID BODIES:
@@ -40,7 +40,6 @@ int main(int argc, char* argv[]) {
 	// 6. TEARDOWN COLLISION SHAPES:
 
 	delete fallingShape;
-	delete groundShape;
 
 	// 7. TEARDOWN BULLET PHYSICS:
 

@@ -13,10 +13,17 @@ PhysicsWorld::PhysicsWorld(btVector3& gravity) : mBroadphase(0), mCollisionConfi
 
 
 PhysicsWorld::~PhysicsWorld(void) {
+	// bodies:
 	for (unsigned int i=0; i<mBodies.size(); ++i) {
 		delete mBodies[i];
 	}
 	mBodies.clear();
+	// shapes:
+	for (unsigned int i=0; i<mCollisionShapes.size(); ++i) {
+		delete mCollisionShapes[i];
+	}
+	mCollisionShapes.clear();
+	// world:
 	delete mDynamicsWorld;
 	delete mSolver;
 	delete mDispatcher;
@@ -33,6 +40,12 @@ PhysicsBody* PhysicsWorld::createBody(btCollisionShape* shape, btScalar mass, bt
 	PhysicsBody* body = new PhysicsBody(shape, mass, startingPos);
 	mBodies.push_back(body);
 	return body;
+}
+
+btCollisionShape* PhysicsWorld::createInfinitePlane(btVector3& normal) {
+	btCollisionShape* plane = new btStaticPlaneShape(normal, 1);
+	mCollisionShapes.push_back(plane);
+	return plane;
 }
 
 
