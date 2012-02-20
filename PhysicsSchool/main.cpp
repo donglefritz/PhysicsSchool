@@ -8,26 +8,20 @@ void hangConsole(void) {
 	std::cin.get();
 }
 
-
 int main(int argc, char* argv[]) {
-	std::cout << "ok" << std::endl;
 
-	// 1. SETUP BULLET PHYSICS:
-
+	// create a physics world:
 	PhysicsWorld* physicsWorld = new PhysicsWorld(btVector3(0,-10,0));
 
-	// 2. SETUP COLLISION SHAPES (reuse as much as possible):
-
+	// create some collision shapes to share among bodies:
 	btCollisionShape* groundShape  = physicsWorld->createInfinitePlane(btVector3(0,1,0));
-	btCollisionShape* fallingShape = new btSphereShape(1);
+	btCollisionShape* fallingShape = physicsWorld->createSphere(1);
 
-	// 3. SETUP RIGID BODIES:
-
+	// create some bodies:
 	PhysicsBody* ground  = physicsWorld->createBody(groundShape,  btScalar(0), btVector3(0, -1, 0));
 	PhysicsBody* falling = physicsWorld->createBody(fallingShape, btScalar(1), btVector3(0, 50, 0)); 
 
-	// 4. RUN SIMULATION:
-
+	// simulate:
 	int numSteps=300;
 	for (int i=0; i<numSteps; ++i) {
 		physicsWorld->tick();
@@ -35,17 +29,9 @@ int main(int argc, char* argv[]) {
 		falling->getRigidBody()->getMotionState()->getWorldTransform(transform);
 		std::cout << "sphere height: " << transform.getOrigin().getY() << std::endl;
 	}
-
-
-	// 6. TEARDOWN COLLISION SHAPES:
-
-	delete fallingShape;
-
-	// 7. TEARDOWN BULLET PHYSICS:
-
+	
+	// clean up:
 	delete physicsWorld;
-
-	// all done.
 	hangConsole();
 	return 0;
 }

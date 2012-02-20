@@ -12,7 +12,8 @@ public:
 	btDiscreteDynamicsWorld* getDynamicsWorld(void);
 
 	virtual btCollisionShape* createInfinitePlane(btVector3& normal);
-	virtual PhysicsBody* createBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
+	virtual btCollisionShape* createSphere(btScalar radius);
+	virtual PhysicsBody* createBody(btCollisionShape* collisionShape, btScalar mass, btVector3& startingPos);
 	virtual void tick(void);
 
 protected:
