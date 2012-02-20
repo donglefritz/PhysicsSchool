@@ -3,9 +3,9 @@
 *.opensdf
 *.suo
 *.user
-ipch/*
-Debug/*
-Release/*
+ipch/
+Debug/
+Release/
 
 # backups:
 *.[zZ]ip
@@ -17,5 +17,5 @@ Release/*
 *.swp
 
 # OS:
-Thumbs.db
+*/Thumbs.db
 
