@@ -64,10 +64,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="PhysicsBody.h" />
+    <ClInclude Include="PhysicsWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
+    <ClCompile Include="PhysicsWorld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

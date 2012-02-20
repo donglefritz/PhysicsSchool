@@ -11,7 +11,6 @@ public:
 	// call this before instantiating objects:
 	static void RegisterDynamicsWorld(btDynamicsWorld* world);
 
-
 	btRigidBody* getRigidBody(void);
 
 protected:
