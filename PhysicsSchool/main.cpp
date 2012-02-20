@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 	// create a physics world:
 	PhysicsWorld* physicsWorld = new PhysicsWorld(btVector3(0,-10,0));
 
-	// create some collision shapes to share among bodies:
+	// create some shapes to share among bodies:
 	btCollisionShape* groundShape  = physicsWorld->createInfinitePlane(btVector3(0,1,0));
 	btCollisionShape* fallingShape = physicsWorld->createSphere(1);
 
@@ -30,8 +30,10 @@ int main(int argc, char* argv[]) {
 		std::cout << "sphere height: " << transform.getOrigin().getY() << std::endl;
 	}
 	
-	// clean up:
+	// clean up the physics world:
 	delete physicsWorld;
+
+	// all done
 	hangConsole();
 	return 0;
 }
