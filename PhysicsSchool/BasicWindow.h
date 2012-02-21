@@ -24,6 +24,7 @@
 // other:
 #include "Utils.h"
 #include "PhysicsWorld.h"
+#include "Body.h"
 #include <ostream>
 #include <cassert>
 
@@ -51,6 +52,7 @@ protected:
 	bool                     mSendKeyboardToGUI; //<- send input to gui?
 	bool                     mSendMouseToGUI;    //<- send input to gui?
 	PhysicsWorld*            mPhysicsWorld;
+	std::vector<Body*>       mBodies;
 	
 	// WindowEventListener interface:
 	virtual void windowResized(Ogre::RenderWindow* rw);
@@ -76,6 +78,8 @@ protected:
 	virtual bool isMouseOverGUI(void);
 	virtual CEGUI::MouseButton BasicWindow::convertMouseButton(OIS::MouseButtonID id);
 
+	// physics:
+	virtual Body* createSphereBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
 
 };
 

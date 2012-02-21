@@ -68,6 +68,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BasicWindow.h" />
+    <ClInclude Include="Body.h" />
     <ClInclude Include="OgreMotionState.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="PhysicsWorld.h" />
@@ -75,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicWindow.cpp" />
+    <ClCompile Include="Body.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OgreMotionState.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />

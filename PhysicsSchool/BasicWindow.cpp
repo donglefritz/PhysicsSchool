@@ -29,6 +29,13 @@ BasicWindow::~BasicWindow(void) {
 	windowClosed(mWindow);
 	delete mRoot; mRoot=0;
 	delete mCameraMan; mCameraMan=0;
+
+	// bodies:
+	for (unsigned int i=0; i<mBodies.size(); ++i) {
+		delete mBodies[i];
+	}
+	mBodies.clear();
+
 	if (mPhysicsWorld != NULL) {
 		delete mPhysicsWorld; mPhysicsWorld=0;
 	}
@@ -154,9 +161,20 @@ void BasicWindow::createGUI(void) {
 
 }
 
-void BasicWindow::createScene(void) {
+Body* BasicWindow::createSphereBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos) {
+	Ogre::Entity* entity  = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
+	Ogre::SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	node->attachObject(entity);
+	entity->setMaterialName("Rock");
+	Body* body = new Body(node, entity, shape, mass, startingPos);
+	mBodies.push_back(body);
+	return body;
+}
 
-	// PHYSICS:
+
+void BasicWindow::createScene(void) {
+	mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
+	addAxesLines(50);
 
 	// create a physics world:
 	mPhysicsWorld = new PhysicsWorld(btVector3(0,-10,0));
@@ -167,19 +185,15 @@ void BasicWindow::createScene(void) {
 	btCollisionShape* boxShape    = mPhysicsWorld->createBox(btVector3(100,100,100));
 	btCollisionShape* groundShape = mPhysicsWorld->createBox(btVector3(1500,1,1500));
 
-	// create some bodies:
+	// new way:
+	for (int i=1; i<11; ++i) {
+		btScalar value(i);
+		createSphereBody(sphereShape, value, btVector3(value,value*100,value));
+	}
+
+
+	// old way (ground):
 	PhysicsBody* ground   = mPhysicsWorld->createBody(groundShape, btScalar(0),  btVector3(0, 0, 0));
-	PhysicsBody* falling  = mPhysicsWorld->createBody(sphereShape, btScalar(1),  btVector3(0, 1000, 0));
-	PhysicsBody* falling2 = mPhysicsWorld->createBody(boxShape,    btScalar(1), btVector3(1, 125, 1));  
-
-	falling->getRigidBody()->
-
-	// GRAPHICS:
-
-	mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
-	addAxesLines(50);
-
-	// ground:
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
 	Ogre::MeshManager::getSingleton().createPlane("groundPlane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
                                                    plane, 1500, 1500, 20, 20, true, 1, 10, 10, Ogre::Vector3::UNIT_Z);
@@ -189,24 +203,6 @@ void BasicWindow::createScene(void) {
 	groundEntity->setCastShadows(false);
 	groundNode->attachObject(groundEntity);
 	ground->setSceneNode(groundNode);
-
-	// falling 1:
-	Ogre::Entity* sphereEntity  = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
-	Ogre::SceneNode* sphereNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-	sphereNode->attachObject(sphereEntity);
-	sphereEntity->setMaterialName("Rock");
-	falling->setSceneNode(sphereNode);
-
-	// falling 2:
-	Ogre::Entity* sphere2  = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE);
-	Ogre::SceneNode* node2 = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-	node2->attachObject(sphere2);
-	sphere2->setMaterialName("Grass");
-	falling2->setSceneNode(node2);
-
-
-
-
 
 
 }
