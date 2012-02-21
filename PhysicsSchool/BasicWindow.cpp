@@ -165,11 +165,14 @@ void BasicWindow::createScene(void) {
 	btCollisionShape* planeShape  = mPhysicsWorld->createInfinitePlane(btVector3(0,1,0));
 	btCollisionShape* sphereShape = mPhysicsWorld->createSphere(50);
 	btCollisionShape* boxShape    = mPhysicsWorld->createBox(btVector3(100,100,100));
+	btCollisionShape* groundShape = mPhysicsWorld->createBox(btVector3(1500,1,1500));
 
 	// create some bodies:
-	PhysicsBody* ground   = mPhysicsWorld->createBody(planeShape,  btScalar(0),  btVector3(0, 0, 0));
+	PhysicsBody* ground   = mPhysicsWorld->createBody(groundShape, btScalar(0),  btVector3(0, 0, 0));
 	PhysicsBody* falling  = mPhysicsWorld->createBody(sphereShape, btScalar(1),  btVector3(0, 1000, 0));
 	PhysicsBody* falling2 = mPhysicsWorld->createBody(boxShape,    btScalar(1), btVector3(1, 125, 1));  
+
+	falling->getRigidBody()->
 
 	// GRAPHICS:
 
@@ -217,7 +220,7 @@ bool BasicWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 	mCameraMan->frameRenderingQueued(evt);
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 
-	int physicsFactor = 5; //<- 10 seems to be about right
+	int physicsFactor = 10; //<- 10 seems to be about right
 	mPhysicsWorld->tick(evt.timeSinceLastFrame * physicsFactor);
 	return true;
 }
