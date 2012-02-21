@@ -22,12 +22,20 @@ int main(int argc, char* argv[]) {
 	PhysicsBody* falling = physicsWorld->createBody(fallingShape, btScalar(1), btVector3(0, 50, 0)); 
 
 	// simulate:
+	bool reversedGravity = false;
 	int numSteps=300;
 	for (int i=0; i<numSteps; ++i) {
 		physicsWorld->tick();
 		btTransform transform;
 		falling->getRigidBody()->getMotionState()->getWorldTransform(transform);
 		std::cout << "sphere height: " << transform.getOrigin().getY() << std::endl;
+
+		if (!reversedGravity && i > 275) {
+			physicsWorld->getDynamicsWorld()->setGravity(btVector3(0,10,0));
+			reversedGravity = true;
+			std::cout << " Gravity has been reversed!" << std::endl;
+		}
+
 	}
 	
 	// clean up the physics world:
