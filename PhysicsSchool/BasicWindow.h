@@ -32,7 +32,7 @@ class BasicWindow : public Ogre::WindowEventListener, public Ogre::FrameListener
 public:
 	BasicWindow(void);
 	virtual ~BasicWindow(void);
-	virtual bool setup(void);
+	virtual bool go(void);
 
 protected:
 	Ogre::Root*              mRoot;

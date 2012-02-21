@@ -1,47 +1,34 @@
 
-#include <iostream>
-#include "PhysicsWorld.h"
+#include "BasicWindow.h"
 
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#define WIN32_LEAN_AND_MEAN
+#include "windows.h"
+#endif
 
-void hangConsole(void) {
-	std::cout << std::endl << "[hit ENTER to close]" << std::endl;
-	std::cin.get();
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-int main(int argc, char* argv[]) {
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+	INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT) {
+#else
+	int main(int argc, char* argv[]) {
+#endif
+		BasicWindow app;
+		try {
+			app.go();
+		} catch(Ogre::Exception& e) {
 
-	// create a physics world:
-	PhysicsWorld* physicsWorld = new PhysicsWorld(btVector3(0,-10,0));
-
-	// create some shapes to share among bodies:
-	btCollisionShape* groundShape  = physicsWorld->createInfinitePlane(btVector3(0,1,0));
-	btCollisionShape* fallingShape = physicsWorld->createSphere(1);
-
-	// create some bodies:
-	PhysicsBody* ground  = physicsWorld->createBody(groundShape,  btScalar(0), btVector3(0, -1, 0));
-	PhysicsBody* falling = physicsWorld->createBody(fallingShape, btScalar(1), btVector3(0, 50, 0)); 
-
-	// simulate:
-	bool reversedGravity = false;
-	int numSteps=300;
-	for (int i=0; i<numSteps; ++i) {
-		physicsWorld->tick();
-		btTransform transform;
-		falling->getRigidBody()->getMotionState()->getWorldTransform(transform);
-		std::cout << "sphere height: " << transform.getOrigin().getY() << std::endl;
-
-		if (!reversedGravity && i > 275) {
-			physicsWorld->getDynamicsWorld()->setGravity(btVector3(0,10,0));
-			reversedGravity = true;
-			std::cout << " Gravity has been reversed!" << std::endl;
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+			MessageBox(NULL, e.getFullDescription().c_str(), "Ogre exception:", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+#else
+			std::cerr << "Ogre exception: " << e.getFullDescription().c_str() << std::endl;
+#endif
 		}
-
+		return 0;
 	}
-	
-	// clean up the physics world:
-	delete physicsWorld;
 
-	// all done
-	hangConsole();
-	return 0;
+#ifdef __cplusplus
 }
+#endif

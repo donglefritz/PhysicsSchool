@@ -14,7 +14,7 @@ public:
 	virtual btCollisionShape* createInfinitePlane(btVector3& normal);
 	virtual btCollisionShape* createSphere(btScalar radius);
 	virtual PhysicsBody* createBody(btCollisionShape* collisionShape, btScalar mass, btVector3& startingPos);
-	virtual void tick(void);
+	virtual void tick(float timeSinceLast);
 
 protected:
 	btBroadphaseInterface*               mBroadphase;

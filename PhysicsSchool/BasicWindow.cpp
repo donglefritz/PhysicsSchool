@@ -13,7 +13,8 @@ BasicWindow::BasicWindow(void) :
 	mCameraMan(0),
 	mKeyboard(0),
 	mMouse(0),
-	mInputManager(0) {
+	mInputManager(0),
+	mPhysicsWorld(0) {
 #ifdef _DEBUG
 	mPluginsFileName   = "plugins_d.cfg";
 	mResourcesFileName = "resources_d.cfg"; 
@@ -28,11 +29,14 @@ BasicWindow::~BasicWindow(void) {
 	windowClosed(mWindow);
 	delete mRoot; mRoot=0;
 	delete mCameraMan; mCameraMan=0;
+	if (mPhysicsWorld != NULL) {
+		delete mPhysicsWorld; mPhysicsWorld=0;
+	}
 }
 
 // INITIALISATION:
 
-bool BasicWindow::setup(void) {
+bool BasicWindow::go(void) {
 
 	// 1. define the root object:
 	
@@ -152,6 +156,31 @@ void BasicWindow::createGUI(void) {
 
 void BasicWindow::createScene(void) {
 
+	// PHYSICS:
+
+	// create a physics world:
+	mPhysicsWorld = new PhysicsWorld(btVector3(0,-10,0));
+
+	// create some shapes to share among bodies:
+	btCollisionShape* groundShape  = mPhysicsWorld->createInfinitePlane(btVector3(0,1,0));
+	btCollisionShape* fallingShape = mPhysicsWorld->createSphere(1);
+
+	// create some bodies:
+	PhysicsBody* ground  = mPhysicsWorld->createBody(groundShape,  btScalar(0), btVector3(0, 0, 0));
+	PhysicsBody* falling = mPhysicsWorld->createBody(fallingShape, btScalar(1), btVector3(0, 500, 0)); 
+
+	// GRAPHICS:
+
+	mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
+	addAxesLines(50);
+
+	Ogre::Entity* sphereEntity  = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
+	Ogre::SceneNode* sphereNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	sphereNode->attachObject(sphereEntity);
+	sphereEntity->setMaterialName("Rock");
+
+	falling->setSceneNode(sphereNode);
+
 }
 
 // CALLBACKS:
@@ -162,6 +191,7 @@ bool BasicWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 	mMouse->capture();
 	mCameraMan->frameRenderingQueued(evt);
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
+	mPhysicsWorld->tick(evt.timeSinceLastFrame);
 	return true;
 }
 

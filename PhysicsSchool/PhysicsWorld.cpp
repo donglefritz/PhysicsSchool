@@ -54,6 +54,6 @@ btCollisionShape* PhysicsWorld::createSphere(btScalar radius) {
 	return sphere;
 }
 
-void PhysicsWorld::tick(void) {
-	mDynamicsWorld->stepSimulation(1/60.0f, 10);
+void PhysicsWorld::tick(float timeSinceLast) {
+	mDynamicsWorld->stepSimulation(timeSinceLast, 10);
 }
