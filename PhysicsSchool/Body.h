@@ -12,6 +12,9 @@ public:
 	Body(Ogre::SceneNode* sceneNode, Ogre::Entity* entity, btCollisionShape* shape, btScalar mass, btVector3& startingPos);
 	~Body(void);
 
+	Ogre::SceneNode* getSceneNode(void);
+	Ogre::Entity*    getEntity(void);
+
 protected:
 	Ogre::SceneNode* mSceneNode;
 	Ogre::Entity*    mEntity;

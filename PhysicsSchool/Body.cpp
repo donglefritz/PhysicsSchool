@@ -10,3 +10,11 @@ Body::Body(Ogre::SceneNode* sceneNode, Ogre::Entity* entity, btCollisionShape* s
 Body::~Body(void) {
 	delete mPhysicsBody;
 }
+
+Ogre::SceneNode* Body::getSceneNode(void) {
+	return mSceneNode;
+}
+
+Ogre::Entity* Body::getEntity(void) {
+	return mEntity;
+}

@@ -32,7 +32,9 @@ BasicWindow::~BasicWindow(void) {
 
 	// bodies:
 	for (unsigned int i=0; i<mBodies.size(); ++i) {
-		delete mBodies[i];
+		if (mBodies[i] != NULL) {
+			delete mBodies[i];
+		}
 	}
 	mBodies.clear();
 
@@ -195,12 +197,12 @@ void BasicWindow::createScene(void) {
 	btCollisionShape* groundShape = mPhysicsWorld->createBox(btVector3(1500,1,1500));
 
 	// new way:
-	for (int i=1; i<21; ++i) {
-		btScalar value(i);
+	for (int i=1; i<51; ++i) {
+		btScalar value((float)i);
 		if (Utils::randomBool()) {
-			createSphereBody(sphereShape, value, btVector3(value, value*100, value));
+			createSphereBody(sphereShape, value, btVector3(value, value*150, value));
 		} else {
-			createCubeBody(boxShape, value, btVector3(value, value*100, value));
+			createCubeBody(boxShape, value, btVector3(value, value*150, value));
 		}
 	}
 
@@ -231,6 +233,21 @@ bool BasicWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
 	int physicsFactor = 10; //<- 10 seems to be about right
 	mPhysicsWorld->tick(evt.timeSinceLastFrame * physicsFactor);
+
+
+	float yThreshold = -10000.0f;
+
+	for (unsigned int i=0; i<mBodies.size(); ++i) {
+		if (mBodies[i]->getSceneNode()->getPosition().y < yThreshold) {
+			mSceneMgr->destroyEntity(mBodies[i]->getEntity());
+			mSceneMgr->destroySceneNode(mBodies[i]->getSceneNode());
+			delete mBodies[i];
+			mBodies.erase(mBodies.begin()+i);
+		}
+	}
+
+
+
 	return true;
 }
 

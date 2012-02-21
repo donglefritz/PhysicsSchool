@@ -29,12 +29,7 @@ PhysicsBody::~PhysicsBody(void) {
 	if (mRigidBody   != NULL) { delete mRigidBody;   }
 }
 
-// other methods:
-
-
-btRigidBody* PhysicsBody::getRigidBody(void) {
-	return mRigidBody;
-}
+// getters and setters:
 
 void PhysicsBody::setSceneNode(Ogre::SceneNode* sceneNode) {
 	mMotionState->setSceneNode(sceneNode);
