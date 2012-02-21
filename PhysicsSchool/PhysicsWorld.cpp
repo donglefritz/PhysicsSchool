@@ -43,7 +43,7 @@ PhysicsBody* PhysicsWorld::createBody(btCollisionShape* collisionShape, btScalar
 }
 
 btCollisionShape* PhysicsWorld::createInfinitePlane(btVector3& normal) {
-	btCollisionShape* plane = new btStaticPlaneShape(normal, 1);
+	btCollisionShape* plane = new btStaticPlaneShape(normal, 0);
 	mCollisionShapes.push_back(plane);
 	return plane;
 }
@@ -53,6 +53,13 @@ btCollisionShape* PhysicsWorld::createSphere(btScalar radius) {
 	mCollisionShapes.push_back(sphere);
 	return sphere;
 }
+
+btCollisionShape* PhysicsWorld::createBox(btVector3& size) {
+	btCollisionShape* box = new btBoxShape(size*0.5f);
+	mCollisionShapes.push_back(box);
+	return box;
+}
+
 
 void PhysicsWorld::tick(float timeSinceLast) {
 	mDynamicsWorld->stepSimulation(timeSinceLast, 10);

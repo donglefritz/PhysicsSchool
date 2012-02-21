@@ -13,6 +13,7 @@ public:
 
 	virtual btCollisionShape* createInfinitePlane(btVector3& normal);
 	virtual btCollisionShape* createSphere(btScalar radius);
+	virtual btCollisionShape* createBox(btVector3& size);
 	virtual PhysicsBody* createBody(btCollisionShape* collisionShape, btScalar mass, btVector3& startingPos);
 	virtual void tick(float timeSinceLast);
 
