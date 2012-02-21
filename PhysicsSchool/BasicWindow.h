@@ -79,7 +79,9 @@ protected:
 	virtual CEGUI::MouseButton BasicWindow::convertMouseButton(OIS::MouseButtonID id);
 
 	// physics:
+	// TODO: handle shared shapes
 	virtual Body* createSphereBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
+	virtual Body* createCubeBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
 
 };
 

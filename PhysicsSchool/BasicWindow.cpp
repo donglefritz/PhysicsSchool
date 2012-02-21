@@ -171,6 +171,15 @@ Body* BasicWindow::createSphereBody(btCollisionShape* shape, btScalar mass, btVe
 	return body;
 }
 
+Body* BasicWindow::createCubeBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos) {
+	Ogre::Entity* entity  = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE);
+	Ogre::SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	node->attachObject(entity);
+	entity->setMaterialName("Grass");
+	Body* body = new Body(node, entity, shape, mass, startingPos);
+	mBodies.push_back(body);
+	return body;
+}
 
 void BasicWindow::createScene(void) {
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
@@ -186,9 +195,13 @@ void BasicWindow::createScene(void) {
 	btCollisionShape* groundShape = mPhysicsWorld->createBox(btVector3(1500,1,1500));
 
 	// new way:
-	for (int i=1; i<11; ++i) {
+	for (int i=1; i<21; ++i) {
 		btScalar value(i);
-		createSphereBody(sphereShape, value, btVector3(value,value*100,value));
+		if (Utils::randomBool()) {
+			createSphereBody(sphereShape, value, btVector3(value, value*100, value));
+		} else {
+			createCubeBody(boxShape, value, btVector3(value, value*100, value));
+		}
 	}
 
 
