@@ -16,7 +16,7 @@ PhysicsBody::PhysicsBody(btCollisionShape* shape, btScalar mass, btVector3& star
 
 	if (mMass > 0) { mCollisionShape->calculateLocalInertia(mMass, mInertia); }
 
-	mMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), mStartingPos));
+	mMotionState = new OgreMotionState(btTransform(btQuaternion(0,0,0,1), mStartingPos), NULL);
 	mRigidBody   = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mMass, mMotionState, mCollisionShape, mInertia));
 
 	if (PhysicsBody::dynamicsWorld != NULL) { PhysicsBody::dynamicsWorld->addRigidBody(mRigidBody); }
@@ -34,4 +34,8 @@ PhysicsBody::~PhysicsBody(void) {
 
 btRigidBody* PhysicsBody::getRigidBody(void) {
 	return mRigidBody;
+}
+
+void PhysicsBody::setSceneNode(Ogre::SceneNode* sceneNode) {
+	mMotionState->setSceneNode(sceneNode);
 }

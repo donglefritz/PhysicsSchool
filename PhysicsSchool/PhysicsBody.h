@@ -2,6 +2,8 @@
 #define PhysicsBody_h
 
 #include <btBulletDynamicsCommon.h>
+#include "OgreMotionState.h"
+#include <OgreSceneNode.h>
 
 class PhysicsBody {
 public:
@@ -11,15 +13,17 @@ public:
 	// call this before instantiating objects:
 	static void RegisterDynamicsWorld(btDynamicsWorld* world);
 
+	void setSceneNode(Ogre::SceneNode* sceneNode);
+
 	btRigidBody* getRigidBody(void);
 
 protected:
-	btScalar              mMass;
-	btVector3             mInertia;
-	btVector3             mStartingPos;
-	btCollisionShape*     mCollisionShape;
-	btDefaultMotionState* mMotionState;
-	btRigidBody*          mRigidBody;
+	btScalar          mMass;
+	btVector3         mInertia;
+	btVector3         mStartingPos;
+	btCollisionShape* mCollisionShape;
+	OgreMotionState*  mMotionState;
+	btRigidBody*      mRigidBody;
 
 private:
 	static btDynamicsWorld* dynamicsWorld;
