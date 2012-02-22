@@ -53,6 +53,7 @@ protected:
 	bool                     mSendMouseToGUI;    //<- send input to gui?
 	PhysicsWorld*            mPhysicsWorld;
 	std::vector<Body*>       mBodies;
+	btCollisionShape*        mProjectileShape;
 	
 	// WindowEventListener interface:
 	virtual void windowResized(Ogre::RenderWindow* rw);
@@ -82,7 +83,7 @@ protected:
 	// TODO: handle shared shapes
 	virtual Body* createSphereBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
 	virtual Body* createCubeBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
-
+	void shootProjectile(void);
 };
 
 #endif // BasicWindow_h

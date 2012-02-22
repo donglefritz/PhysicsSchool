@@ -196,6 +196,10 @@ void BasicWindow::createScene(void) {
 	btCollisionShape* boxShape    = mPhysicsWorld->createBox(btVector3(100,100,100));
 	btCollisionShape* groundShape = mPhysicsWorld->createBox(btVector3(1500,1,1500));
 
+	mProjectileShape = sphereShape;
+
+	createCubeBody(boxShape, btScalar(1), btVector3(0, 0, 0));
+
 	// new way:
 	for (int i=1; i<51; ++i) {
 		btScalar value((float)i);
@@ -205,7 +209,6 @@ void BasicWindow::createScene(void) {
 			createCubeBody(boxShape, value, btVector3(value, value*150, value));
 		}
 	}
-
 
 	// old way (ground):
 	PhysicsBody* ground   = mPhysicsWorld->createBody(groundShape, btScalar(0),  btVector3(0, 0, 0));
@@ -223,6 +226,28 @@ void BasicWindow::createScene(void) {
 }
 
 // CALLBACKS:
+
+void BasicWindow::shootProjectile(void) {
+	Ogre::Vector3 camPos(mCamera->getPosition());
+	Ogre::Vector3 origFacing(Ogre::Vector3::UNIT_X);
+	Ogre::Vector3 camFacing(mCamera->getOrientation() * origFacing);
+	Ogre::Vector3 direction = camFacing - camPos;
+	
+
+	direction.normalise();
+	
+	int speed = 100;
+	btVector3 pos(camPos.x, camPos.y, camPos.z);
+	btVector3 gravity(direction.x, direction.y, direction.z);
+	gravity *= speed;
+
+
+	Body* body = createSphereBody(mProjectileShape, btScalar(1), pos);
+
+
+	body->getPhysicsBody()->getRigidBody()->setGravity(gravity);
+	
+}
 
 bool BasicWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 	if (mWindow->isClosed() || mShutDown) { return false; }
@@ -302,6 +327,9 @@ bool BasicWindow::keyPressed(const OIS::KeyEvent& evt) {
 		break;
 	case OIS::KC_PGDOWN:	//<- down
 		mCamera->setPosition(mCamera->getPosition()+Ogre::Vector3(0,-moveAmount,0));
+		break;
+	case OIS::KC_SPACE:
+		shootProjectile();
 		break;
 	default:
 		if (mSendKeyboardToGUI) {
