@@ -18,3 +18,7 @@ Ogre::SceneNode* Body::getSceneNode(void) {
 Ogre::Entity* Body::getEntity(void) {
 	return mEntity;
 }
+
+PhysicsBody* Body::getPhysicsBody(void) {
+	return mPhysicsBody;
+}

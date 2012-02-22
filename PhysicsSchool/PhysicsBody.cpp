@@ -34,3 +34,7 @@ PhysicsBody::~PhysicsBody(void) {
 void PhysicsBody::setSceneNode(Ogre::SceneNode* sceneNode) {
 	mMotionState->setSceneNode(sceneNode);
 }
+
+btRigidBody* PhysicsBody::getRigidBody(void) {
+	return mRigidBody;
+}

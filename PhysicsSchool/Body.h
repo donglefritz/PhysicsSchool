@@ -14,6 +14,7 @@ public:
 
 	Ogre::SceneNode* getSceneNode(void);
 	Ogre::Entity*    getEntity(void);
+	PhysicsBody*     getPhysicsBody(void);
 
 protected:
 	Ogre::SceneNode* mSceneNode;
