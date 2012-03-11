@@ -93,14 +93,16 @@ bool BasicWindow::go(void) {
 	mCamera->setNearClipDistance(1);
 	//mCamera->setFarClipDistance(10000);
 
+	mCameraNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("cameraNode");
+	mCameraNode->attachObject(mCamera);
+
 	mCameraMan = new OgreBites::SdkCameraMan(mCamera);
 
 	Ogre::Viewport* vp = mWindow->addViewport(mCamera);
 	//vp->setBackgroundColour(Ogre::ColourValue(1, 1, 1));
 	mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 
-	mCameraNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("cameraNode");
-	mCameraNode->attachObject(mCamera);
+
 
 	createGUI();
 	createScene();
@@ -202,52 +204,78 @@ void BasicWindow::createScene(void) {
 
 	// new way:
 	for (int i=1; i<51; ++i) {
+		btScalar mass(1.0f);
 		btScalar value((float)i);
 		if (Utils::randomBool()) {
-			createSphereBody(sphereShape, value, btVector3(value, value*150, value));
+			createSphereBody(sphereShape, mass, btVector3(value, value*150, value));
 		} else {
-			createCubeBody(boxShape, value, btVector3(value, value*150, value));
+			createCubeBody(boxShape, mass, btVector3(value, value*150, value));
 		}
 	}
 
+
+	
+
 	// old way (ground):
 	PhysicsBody* ground   = mPhysicsWorld->createBody(groundShape, btScalar(0),  btVector3(0, 0, 0));
-	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
+	Ogre::Plane groundPlane(Ogre::Vector3::UNIT_Y, 0);
 	Ogre::MeshManager::getSingleton().createPlane("groundPlane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                   plane, 1500, 1500, 20, 20, true, 1, 10, 10, Ogre::Vector3::UNIT_Z);
+                                                   groundPlane, 1500, 1500, 20, 20, true, 1, 10, 10, Ogre::Vector3::UNIT_Z);
 	Ogre::Entity* groundEntity  = mSceneMgr->createEntity("groundEntity", "groundPlane");
-	Ogre::SceneNode* groundNode = mSceneMgr->getRootSceneNode();
+	Ogre::SceneNode* groundNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 	groundEntity->setMaterialName("BlackBorder");
 	groundEntity->setCastShadows(false);
 	groundNode->attachObject(groundEntity);
 	ground->setSceneNode(groundNode);
 
 
+	// TODO: stop using the sdkcameraman because it apparently doesn't use scenenodes. This means it's impossible to attach
+	//       entities to the camera (guns, players, etc...)
+
+
+
+
+
+
 }
 
 // CALLBACKS:
 
-void BasicWindow::shootProjectile(void) {
-	Ogre::Vector3 camPos(mCamera->getPosition());
-	Ogre::Vector3 origFacing(Ogre::Vector3::UNIT_X);
-	Ogre::Vector3 camFacing(mCamera->getOrientation() * origFacing);
-	Ogre::Vector3 direction = camFacing - camPos;
-	
+void BasicWindow::drawLine(void) {
+	Ogre::ManualObject* myManualObject =  mSceneMgr->createManualObject("manual1"); 
+	Ogre::SceneNode* myManualObjectNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("manual1_node"); 
+ 
+	Ogre::MaterialPtr myManualObjectMaterial = Ogre::MaterialManager::getSingleton().create("manual1Material","MyMats"); 
+	myManualObjectMaterial->setReceiveShadows(false); 
+	myManualObjectMaterial->getTechnique(0)->setLightingEnabled(true); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setDiffuse(0,0,1,0); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setAmbient(0,0,1); 
+	myManualObjectMaterial->getTechnique(0)->getPass(0)->setSelfIllumination(0,0,1); 
 
-	direction.normalise();
-	
-	int speed = 100;
+ 
+ 
+	myManualObject->begin("manual1Material", Ogre::RenderOperation::OT_LINE_LIST); 
+	myManualObject->position(3, 2, 1); 
+	myManualObject->position(4, 1, 0); 
+	// etc 
+	myManualObject->end(); 
+ 
+	myManualObjectNode->attachObject(myManualObject);
+}
+
+void BasicWindow::shootProjectile(void) {
+	float speed = 100.0f;
+	Ogre::Vector3 camPos(mCamera->getPosition());
+	Ogre::Vector3 direction = mCamera->getDirection();
+
 	btVector3 pos(camPos.x, camPos.y, camPos.z);
 	btVector3 gravity(direction.x, direction.y, direction.z);
 	gravity *= speed;
-
-
 	Body* body = createSphereBody(mProjectileShape, btScalar(1), pos);
-
-
 	body->getPhysicsBody()->getRigidBody()->setGravity(gravity);
-	
 }
+
+
 
 bool BasicWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 	if (mWindow->isClosed() || mShutDown) { return false; }

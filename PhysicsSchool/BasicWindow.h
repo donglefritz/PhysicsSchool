@@ -84,6 +84,7 @@ protected:
 	virtual Body* createSphereBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
 	virtual Body* createCubeBody(btCollisionShape* shape, btScalar mass, btVector3& startingPos);
 	void shootProjectile(void);
+	void drawLine(void);
 };
 
 #endif // BasicWindow_h
